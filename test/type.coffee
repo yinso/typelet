@@ -1,4 +1,4 @@
-Type = require '../src/type2'
+Type = require '../src/'
 { assert } = require 'chai'
 
 
@@ -117,7 +117,7 @@ describe 'Type test', ->
 
   it 'can create traits', ->
     tA = Type.makeAnyType()
-    eq = Type.makeTraitType
+    eq = Type.makeTypeTrait
       name: 'Eq'
       types: [ tA ]
       procedures:
