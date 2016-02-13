@@ -1,30 +1,32 @@
 {
   "author": "YC <yinso.chen@gmail.com>",
-  "name": "prettylet",
-  "description": "A customizable pretty print framework",
+  "name": "typelet",
+  "description": "An extensible type/contract system",
   "version": "0.1.0",
+  "license": "BSD",
   "repository": {
     "type": "git",
-    "url": "git://bitbucket.org/yinso/prettylet.git"
+    "url": "git://bitbucket.org/yinso/typelet.git"
   },
   "main": "./lib/",
   "engines": {
     "node": ">= 0.8.4"
   },
   "scripts": {
-    "prepublish": "make",
     "test": "mocha --compilers coffee:coffee-script/register --recursive"
   },
-  "dependencies": {},
+  "dependencies": {
+  },
   "devDependencies": {
     "chai": "^3.4.1",
     "coffee-script": "^1.10.0",
-    "mocha": "^2.3.4",
-    "should": "^8.1.1"
+    "mocha": "^2.3.4"
   },
   "keywords": [
-    "pretty-print",
-    "pretty",
+    "type system",
+    "type",
+    "contract",
     "extensible"
   ]
 }
+
