@@ -12,12 +12,21 @@ class ObjectType extends Type
       return new ObjectType properties
     super()
     keys = {}
-    for prop in properties
-      if not (prop instanceof Type) and prop.typeCategory == 'Property'
-        throw new Error("invalid_property_type: #{prop}")
-      if keys.hasOwnProperty(prop.name)
-        throw new Error("duplicate_key: #{prop}")
-      keys[prop.name] = prop
+    if properties instanceof Array
+      for prop in properties
+        if not (prop instanceof Type) and prop.typeCategory == 'Property'
+          throw new Error("invalid_property_type: #{prop}")
+        if keys.hasOwnProperty(prop.name)
+          throw new Error("duplicate_key: #{prop}")
+        keys[prop.name] = prop
+    else if properties instanceof Object
+      for key, type of properties
+        if properties.hasOwnProperty(key)
+          if not (type instanceof Type)
+            throw new Error("invalid_property_type: #{type}")
+        keys[key] = new PropertyType key, type
+    else
+      throw new Error("invalid_object_type_properties: must_be_array_of_property_types_or_object_of_types")
     options =
       typeID: Type.typeID++
       properties: properties

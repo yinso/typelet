@@ -33,6 +33,9 @@ describe 'Primitive Type Test', ->
     it 'can convert', ->
       assert.ok Type.Boolean.convert 'true'
       
+    it 'can assign from', ->
+      assert.ok Type.Boolean.canAssignFrom Type.Boolean
+
   describe 'Integer test', ->
 
     it 'can check integer', ->
@@ -52,6 +55,16 @@ describe 'Primitive Type Test', ->
     it 'can resolve', ->
       assert.ok Type.Integer.equal Type.resolve 1
 
+    it 'can convert', ->
+      assert.equal 5, Type.Integer.convert '5'
+      assert.equal 6, Type.Integer.convert 5.5 # this is explicit in the sense that users will call this function directly.
+      #assert.throws -> Type.Integer.convert 5.5, { path : '$', isExplicit: false } # this is implicit in the sense that it afford programmatic way to control an implicit behavior
+      assert.throws -> Type.Integer.convert null
+
+    it 'can assign from', ->
+      assert.ok Type.Integer.canAssignFrom Type.Integer
+      assert.notOk Type.Integer.canAssignFrom Type.Float
+      
   describe 'Float test', ->
 
     it 'can check', ->
@@ -65,11 +78,18 @@ describe 'Primitive Type Test', ->
     it 'can resolve', ->
       assert.ok Type.Float.equal Type.resolve 1.5
 
+    it 'can assign from', ->
+      assert.ok Type.Float.canAssignFrom Type.Float
+      #assert.ok Type.Float.canAssignFrom Type.Integer
+      
   describe 'Date test', ->
     it 'can check', ->
       assert.ok Type.Date.isa new Date()
     it 'can resolve', ->
       assert.ok Type.Date.equal Type.resolve new Date()
+    it 'can convert', ->
+      assert.throws -> Type.Date.convert 'hello'
+
 
   describe 'String test', ->
     it 'can check', ->

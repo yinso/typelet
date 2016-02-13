@@ -1,5 +1,11 @@
+Type = require './type'
+util = require './util'
+errLib = require './error'
+
 class TypeBinder
   constructor: () ->
+    if not (@ instanceof TypeBinder)
+      return new TypeBinder()
     @binders = []
   canAssignFrom: (lhs, rhs) ->
     try
@@ -9,7 +15,7 @@ class TypeBinder
       false
   canAssignTo: (lhs, rhs) ->
     @canAssignFrom rhs, lhs
-  assignFrom: (lhs, rhs) ->
+  assignFrom: (lhs, rhs, i = 0) ->
     for binder in @binders
       if binder.lhs == lhs
         if binder.rhs.canAssignFrom rhs
@@ -22,8 +28,11 @@ class TypeBinder
         continue
       throw new Error("TypeBinder:bindingFailed at #{i}: #{lhs} <!= #{rhs}")
     @binders.push { lhs: lhs , rhs: rhs }
-  assignTo: (lhs, rhs) ->
-    @canAssignFrom rhs, lhs
+  assignTo: (lhs, rhs, i = 0) ->
+    @canAssignFrom rhs, lhs, i
+
+util._mixin Type,
+  makeTypeBinder: TypeBinder
 
 module.exports = TypeBinder
 
