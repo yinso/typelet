@@ -3,8 +3,8 @@ Type = require '../src/'
 
 describe 'Array type test', ->
 
-  arrayOfInt = Type.makeArrayType(Type.Integer)
-  arrayOfFloat = Type.makeArrayType Type.Float
+  arrayOfInt = Type.ArrayType(Type.Integer)
+  arrayOfFloat = Type.ArrayType Type.Float
 
   it 'can check', ->
     assert.ok arrayOfInt.isa [ 1 , 2 , 3 ]

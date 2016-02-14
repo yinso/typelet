@@ -5,15 +5,15 @@ describe 'Procedure test', ->
 
   it 'can assign from procedure types', ->
     # procedure types follow the contravariant(args) and covariant(ret)
-    p1 = Type.makeProcedureType([Type.Integer,Type.Integer],Type.Integer)
-    p2 = Type.makeProcedureType([Type.Integer,Type.Integer],Type.makeAnyType())
+    p1 = Type.ProcedureType([Type.Integer,Type.Integer],Type.Integer)
+    p2 = Type.ProcedureType([Type.Integer,Type.Integer],Type.makeAnyType())
     #assert.notOk p1.canAssignFrom p1
     #assert.ok p2.canAssignFrom p1
 
   it 'can handle procedure subtypes', ->
-    p1 = Type.makeProcedureType([Type.Integer,Type.Integer],Type.Integer)
+    p1 = Type.ProcedureType([Type.Integer,Type.Integer],Type.Integer)
     typeA = Type.makeAnyType()
-    p2 = Type.makeProcedureType([typeA, typeA], typeA)
+    p2 = Type.ProcedureType([typeA, typeA], typeA)
     assert.ok p2.canAssignFrom p1
 
   it 'can make procedures with preconditions', ->
@@ -30,10 +30,10 @@ describe 'Procedure test', ->
     assert.throws -> add.check(1, 1.5) # 1.5 cannot be converted to integer (loss of precision)
 
   it 'can assign arguments for procedure types', ->
-    p1 = Type.makeProcedureType([Type.Integer, Type.Integer], Type.Integer)
+    p1 = Type.ProcedureType([Type.Integer, Type.Integer], Type.Integer)
     assert.ok p1.canAssignArgumentsFrom [1, 2]
-    objType = Type.makeObjectType([Type.makePropertyType('b',Type.Integer),Type.makePropertyType('a',Type.Integer)])
-    p2 = Type.makeProcedureType [ objType , Type.String ], Type.Float
+    objType = Type.ObjectType([Type.PropertyType('b',Type.Integer),Type.PropertyType('a',Type.Integer)])
+    p2 = Type.ProcedureType [ objType , Type.String ], Type.Float
     assert.ok p2.canAssignArgumentsFrom [ {a: 1, b: 2, c: 'test'}, 'hello' ]
 
   it 'can work with generic binding', ->
@@ -50,7 +50,7 @@ describe 'Procedure test', ->
       name: 'Eq'
       types: [ tA ]
       procedures:
-        '==': Type.makeProcedureType [ tA , tA ] , Type.Boolean
+        '==': Type.ProcedureType [ tA , tA ] , Type.Boolean
         '!=': Type.makeProc [ tA , tA ], Type.Boolean, (a, b) -> not (eq.runProcedure '==', a, b)
     assert.ok eq
     intEq = eq.implement

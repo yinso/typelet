@@ -3,9 +3,9 @@ Type = require '../src'
 
 describe 'Object test', ->
 
-  fooType = Type.makeObjectType [
-    Type.makePropertyType('foo', Type.Integer)
-    Type.makePropertyType('bar', Type.String)
+  fooType = Type.ObjectType [
+    Type.PropertyType('foo', Type.Integer)
+    Type.PropertyType('bar', Type.String)
   ]
 
   it 'can check', ->
@@ -22,20 +22,20 @@ describe 'Object test', ->
 
   it 'can catch duplicate keys', ->
     assert.throws ->
-      Type.makeObjectType [
-        Type.makePropertyType('foo', Type.Integer)
-        Type.makePropertyType('bar', Type.String)
-        Type.makePropertyType('foo', Type.Boolean)
+      Type.ObjectType [
+        Type.PropertyType('foo', Type.Integer)
+        Type.PropertyType('bar', Type.String)
+        Type.PropertyType('foo', Type.Boolean)
       ]
 
   it 'can make simple objet types', ->
-    Type.makeObjectType
+    Type.ObjectType
       foo: Type.Integer
       bar: Type.String
 
   it 'can assign from', ->
-    objType1 = Type.makeObjectType([Type.makePropertyType('a',Type.Integer)])
-    objType2 = Type.makeObjectType([Type.makePropertyType('b',Type.Integer),Type.makePropertyType('a',Type.Integer)])
+    objType1 = Type.ObjectType([Type.PropertyType('a',Type.Integer)])
+    objType2 = Type.ObjectType([Type.PropertyType('b',Type.Integer),Type.PropertyType('a',Type.Integer)])
     assert.ok objType1.canAssignFrom(objType2)
     assert.notOk objType2.canAssignFrom(objType1)
 

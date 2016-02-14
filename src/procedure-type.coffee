@@ -174,6 +174,16 @@ class ProcedureType extends Type
       binder.canAssignTo @returnType, type.returnType
     else
       false
+  equal: (type) ->
+    if type instanceof ProcedureType
+      if @parameterTypes.length != type.parameterTypes.length
+        return false
+      for param, i in @parameterTypes
+        if not param.equal(type.parameterTypes[i])
+          return false
+      return @returnType.equal(type.returnType)
+    else
+      false
   _toString: (env) ->
     params =
       for param in @parameterTypes
@@ -200,7 +210,7 @@ makeProc = (argsTypes, retType, proc, options = {}) ->
 
 util._mixin Type,
   makeProc: makeProc
-  makeProcedureType: ProcedureType
+  ProcedureType: ProcedureType
 
 module.exports = ProcedureType
 

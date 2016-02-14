@@ -8,10 +8,12 @@
 
     var Type = require('typelet');
     
-    // type checking.
+Type checking:
+
     Type.Integer.isa(1); // ==> true
     Type.Integer.isa(1.5); // ==> false
     Type.Float.isa(1.5); // ==> true
+    
     // compound types.
     var intArrayType = Type.ArrayType(Type.Integer)
     intArrayType.isa([1, 2, 3, 4, 5]); // ==> true
@@ -19,7 +21,8 @@
     objFooType.isa({foo: 1, bar: 'a string'}); // ==> true
     objFooType.isa({foo: 1, baz: 2}); // ==> false
 
-    // type checking via assert.
+Type checking via assert:
+
     Type.Integer.assert(1); // OK
     Type.Integer.assert(1.5); // throws
     intArrayType.assert([1, 'not an int']); // throws
@@ -27,11 +30,17 @@
     objFooType.assert({foo: 1, bar: 'a string', baz: 2}); // OK - ObjectType is okay with additional attributes.
     objFooType.assert({foo: 1, bar: 2}); // throws
 
-    // type conversion
+Type conversion:
+
     var val = Type.Integer.convert('1'); // string -> int
     var val = Type.Integer.convert('not an int'); // throws
-    
+
+
+
+
 ## Built-In Types
+
+Built-in types currently follows JavaScript built-in types.
 
 * Scalar Types
     * unit (`Type.Unit`) - maps to `undefined` in JavaScript.

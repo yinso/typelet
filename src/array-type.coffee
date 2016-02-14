@@ -61,7 +61,7 @@ class ArrayType extends Type
 Type.attachType Array, ArrayType()
 
 util._mixin Type,
-  makeArrayType: ArrayType
+  ArrayType: ArrayType
 
 module.exports = ArrayType
 

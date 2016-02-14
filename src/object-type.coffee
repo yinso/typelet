@@ -89,11 +89,23 @@ class ObjectType extends Type
       for prop in @properties
         prop._toString(env)
     "Object[#{props.join(',')}]"
+  has: (key) ->
+    @get(key) != undefined
+  get: (key) ->
+    for p in @properties
+      if p.name == key
+        return p
+    undefined
+  append: (prop) ->
+    for p in @properties
+      if prop.name == p.name
+        throw new Error("object_type_duplicate_property: #{prop.name}")
+    @properties.push prop
 
 Type.attachType Object, ObjectType()
 
 util._mixin Type,
-  makeObjectType: ObjectType
+  ObjectType: ObjectType
 
 module.exports = ObjectType
 

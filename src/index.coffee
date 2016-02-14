@@ -8,5 +8,13 @@ require './oneof-type'
 require './procedure-type'
 require './type-trait'
 
+util = require './util'
+
+parser = require('./parser')
+util._mixin Type,
+  Parser: parser
+  parse: (exps) ->
+    parser.parse exps
+
 module.exports = Type
 

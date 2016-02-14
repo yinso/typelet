@@ -40,7 +40,7 @@ class PropertyType extends Type
     (type instanceof PropertyType) and @innerType.equal(type.innerType)
 
 util._mixin Type,
-  makePropertyType: PropertyType
+  PropertyType: PropertyType
 
 module.exports = PropertyType
 

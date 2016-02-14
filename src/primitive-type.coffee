@@ -1,5 +1,6 @@
 Type = require './type'
 util = require './util'
+errLib = require './error'
 
 ####################
 # PRIMITIVE TYPES

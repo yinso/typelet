@@ -65,7 +65,7 @@ class OneOfType extends Type
     "OneOf[#{types.join(',')}]"
 
 util._mixin Type,
-  makeOneOfType: OneOfType
+  OneOfType: OneOfType
 
 module.exports = OneOfType
 
