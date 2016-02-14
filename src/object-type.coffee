@@ -12,6 +12,7 @@ class ObjectType extends Type
       return new ObjectType properties
     super()
     keys = {}
+    props = []
     if properties instanceof Array
       for prop in properties
         if not (prop instanceof Type) and prop.typeCategory == 'Property'
@@ -19,17 +20,20 @@ class ObjectType extends Type
         if keys.hasOwnProperty(prop.name)
           throw new Error("duplicate_key: #{prop}")
         keys[prop.name] = prop
+        props.push prop
     else if properties instanceof Object
       for key, type of properties
         if properties.hasOwnProperty(key)
           if not (type instanceof Type)
             throw new Error("invalid_property_type: #{type}")
-        keys[key] = new PropertyType key, type
+        prop = new PropertyType key, type
+        keys[key] = prop
+        props.push prop
     else
       throw new Error("invalid_object_type_properties: must_be_array_of_property_types_or_object_of_types")
     options =
       typeID: Type.typeID++
-      properties: properties
+      properties: props
     util._mixin @, options
   typeCategory: 'Object'
   isGeneric: () ->

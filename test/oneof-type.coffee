@@ -3,7 +3,7 @@ Type = require '../src'
 
 describe 'One Of Type test', ->
 
-  intOrString = Type.OneOfType Type.Integer, Type.String
+  intOrString = Type.OneOfType [ Type.Integer, Type.String ]
 
   it 'can check', ->
     assert.ok intOrString.isa 10
@@ -24,8 +24,8 @@ describe 'One Of Type test', ->
     assert.ok intOrString.canAssignFrom Type.String
     assert.notOk intOrString.canAssignFrom Type.Boolean
 
-    intOrNull = Type.OneOfType(Type.Integer, Type.Null)
-    assert.ok intOrNull.canAssignFrom Type.OneOfType(Type.Null, Type.Integer) # order of the oneOfType doesn't matter.
+    intOrNull = Type.OneOfType [ Type.Integer, Type.Null ]
+    assert.ok intOrNull.canAssignFrom Type.OneOfType [ Type.Null, Type.Integer ] # order of the oneOfType doesn't matter.
     assert.ok intOrNull.canAssignFrom Type.Integer
     assert.ok intOrNull.canAssignFrom Type.Null
 

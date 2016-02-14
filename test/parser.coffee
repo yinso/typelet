@@ -47,7 +47,7 @@ describe 'parser test', ->
 
     it 'should parse (int | null)', ->
       type = Parser.parse('(int | null)')
-      assert.ok Type.OneOfType(Type.Integer, Type.Null).equal type
+      assert.ok Type.OneOfType( [ Type.Integer, Type.Null ] ).equal type
 
   describe 'procedure type parser test', ->
 

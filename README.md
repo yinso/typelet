@@ -35,7 +35,27 @@ Type conversion:
     var val = Type.Integer.convert('1'); // string -> int
     var val = Type.Integer.convert('not an int'); // throws
 
+JSON Schema support (limited at this time):
 
+    Type.JsonSchema.build({ type: 'integer' }) // ==> Type.Integer
+    Type.JsonSchema.build({ type: 'number' }) // ==> Type.Float
+    Type.JsonSchema.build({ type: 'string' }) // ==> Type.String
+    Type.JsonSchema.build({ type: 'boolean' }) // ==> Type.Boolean
+    Type.JsonSchema.build({ type: 'null' }) // ==> Type.Null
+    Type.JsonSchema.build({ type: 'array', items: { type: 'integer' }) // ==> Type.ArrayType(Type.Integer)
+    Type.JsonSchema.build({ type: 'object',
+      properties: {
+        foo: { type: 'integer' },
+	bar: { type: 'number' }
+      }
+    }) // Type.ObjectType({ foo: Type.Integer, bar: Type.Float })
+    Type.JsonSchema.build({ type: [ 'integer', 'null' ] }) // Type.OneOfType(Type.Integer, Type.Null)
+    Type.JsonSchema.build({ oneOf: [
+      { type: 'integer' },
+      { type: 'null' }
+    ]}) // same as above, Type.OneOfType(Type.Integer, Type.Null)
+
+Note that `typelet` contains types that do not exist in Json Schema as well.
 
 
 ## Built-In Types

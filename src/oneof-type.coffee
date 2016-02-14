@@ -6,10 +6,14 @@ Type = require './type'
 # OneOf TYPES.
 ####################
 class OneOfType extends Type
-  constructor: (types...) ->
+  constructor: (types) ->
     if not (@ instanceof OneOfType)
-      return new OneOfType types...
+      return new OneOfType types
     super()
+    if not (types instanceof Array)
+      throw new Error("one_of_type_takes_array_of_types")
+    if types.length == 0
+      throw new Error("one_of_type_must_take_at_least_one_type")
     for type in types
       if not type instanceof Type
         throw new Error("one_of_type_take_only_types: #{type}")

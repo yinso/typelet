@@ -90,7 +90,7 @@ module.exports = (function() {
           if (types.length == 0) {
             return type;
           } else {
-            return Type.OneOfType.apply(Type, types.concat(type));
+            return Type.OneOfType(types.concat([ type ]));
           }
         },
         peg$c49 = "|",
