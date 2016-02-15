@@ -24,7 +24,7 @@ class ObjectType extends Type
         if properties.hasOwnProperty(key)
           if not (type instanceof Type)
             throw new Error("invalid_property_type: #{type}")
-        @append new PropertyType key, type
+        @set key, type
     else
       throw new Error("invalid_object_type_properties: must_be_array_of_property_types_or_object_of_types")
   typeCategory: 'Object'
@@ -92,6 +92,8 @@ class ObjectType extends Type
       @properties[key]
     else
       throw new Error("ObjectType.get:unknown_key: #{key}")
+  set: (key, type) ->
+    @append Type.PropertyType(key, type)
   append: (prop) ->
     if not (prop instanceof Type) and prop.typeCategory == 'Property'
       throw new Error("invalid_property_type: #{prop}")
