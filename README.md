@@ -37,26 +37,37 @@ Type conversion:
 
 JSON Schema support (limited at this time):
 
-    Type.JsonSchema.build({ type: 'integer' }) // ==> Type.Integer
-    Type.JsonSchema.build({ type: 'number' }) // ==> Type.Float
-    Type.JsonSchema.build({ type: 'string' }) // ==> Type.String
-    Type.JsonSchema.build({ type: 'boolean' }) // ==> Type.Boolean
-    Type.JsonSchema.build({ type: 'null' }) // ==> Type.Null
-    Type.JsonSchema.build({ type: 'array', items: { type: 'integer' }) // ==> Type.ArrayType(Type.Integer)
-    Type.JsonSchema.build({ type: 'object',
-      properties: {
+    var typeEnv = Type.JsonSchema.build({
+      definitions: {
         foo: { type: 'integer' },
-	bar: { type: 'number' }
+	bar: {
+	  type: 'object',
+	  properties: {
+	    foo: { $ref: '#/definitions/foo' },
+	    baz: { type: 'number' }
+	  }
+	},
+	baz: {
+	  type: 'object'
+	  properties: {
+	    xyz: { $ref: '#/definitions/bar' },
+	    abc: {
+	      type: 'array',
+	      items: { type: 'boolean' }
+	    }
+	  }
+	},
+	abc: {
+	  type: 'integer',
+	  default: 50
+	}
       }
-    }) // Type.ObjectType({ foo: Type.Integer, bar: Type.Float })
-    Type.JsonSchema.build({ type: [ 'integer', 'null' ] }) // Type.OneOfType(Type.Integer, Type.Null)
-    Type.JsonSchema.build({ oneOf: [
-      { type: 'integer' },
-      { type: 'null' }
-    ]}) // same as above, Type.OneOfType(Type.Integer, Type.Null)
-
-Note that `typelet` contains types that do not exist in Json Schema as well.
-
+    });
+    typeEnv.get('foo').isa(1) // true
+    typeEnv.get('bar').isa({ foo: 1, bar: 2.5 }) // true
+    typeEnv.get('baz').isa({ xyz: { foo: 1, bar: 2.5 }, abc: [ true, false, true ] }) // true
+    typeEnv.get('abc').isa(10) // true
+    typeEnv.get('abc').convert() // ==> 50, default val works.
 
 ## Built-In Types
 

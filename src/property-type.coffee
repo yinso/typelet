@@ -32,6 +32,17 @@ class PropertyType extends Type
     (type instanceof PropertyType) and @name == type.name and @innerType.canAssignFrom(type.innerType)
   build: PropertyType
   isa: (obj) -> @innerType.isa obj
+  convert: (obj, options = {}) ->
+    if obj == undefined 
+      if @hasOwnProperty('defaultVal')
+        if util._isFunction @defaultVal
+          @defaultVal()
+        else
+          @defaultVal
+      else
+        super obj, options
+    else
+      super obj, options
   _convert: (obj, error, path , isExplicit) ->
     @innerType._convert obj, error, path , isExplicit
   _toString: (env) ->
