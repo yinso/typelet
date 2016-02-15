@@ -32,9 +32,9 @@ describe 'Object test', ->
     type = Type.ObjectType
       foo: Type.Integer
       bar: Type.String
-    assert.equal 2, type.properties.length
-    assert.ok Type.PropertyType('foo', Type.Integer).equal type.properties[0]
-    assert.ok Type.PropertyType('bar', Type.String).equal type.properties[1]
+    assert.equal 2, type.ordered.length
+    assert.ok Type.PropertyType('foo', Type.Integer).equal type.get('foo')
+    assert.ok Type.PropertyType('bar', Type.String).equal type.get('bar')
 
   it 'can assign from', ->
     objType1 = Type.ObjectType([Type.PropertyType('a',Type.Integer)])

@@ -37,7 +37,7 @@ Type conversion:
 
 JSON Schema support (limited at this time):
 
-    var typeEnv = Type.JsonSchema.build({
+    var schema = Type.Schema({
       definitions: {
         foo: { type: 'integer' },
 	bar: {
@@ -63,11 +63,11 @@ JSON Schema support (limited at this time):
 	}
       }
     });
-    typeEnv.get('foo').isa(1) // true
-    typeEnv.get('bar').isa({ foo: 1, bar: 2.5 }) // true
-    typeEnv.get('baz').isa({ xyz: { foo: 1, bar: 2.5 }, abc: [ true, false, true ] }) // true
-    typeEnv.get('abc').isa(10) // true
-    typeEnv.get('abc').convert() // ==> 50, default val works.
+    schema.get('foo').isa(1) // true
+    schema.get('bar').isa({ foo: 1, bar: 2.5 }) // true
+    schema.get('baz').isa({ xyz: { foo: 1, bar: 2.5 }, abc: [ true, false, true ] }) // true
+    schema.get('abc').isa(10) // true
+    schema.get('abc').convert() // ==> 50, default val works.
 
 ## Built-In Types
 

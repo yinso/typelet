@@ -11,30 +11,22 @@ class ObjectType extends Type
     if not (@ instanceof ObjectType)
       return new ObjectType properties
     super()
-    keys = {}
-    props = []
+    options =
+      typeID: Type.typeID++
+      properties: {}
+      ordered: []
+    util._mixin @, options
     if properties instanceof Array
       for prop in properties
-        if not (prop instanceof Type) and prop.typeCategory == 'Property'
-          throw new Error("invalid_property_type: #{prop}")
-        if keys.hasOwnProperty(prop.name)
-          throw new Error("duplicate_key: #{prop}")
-        keys[prop.name] = prop
-        props.push prop
+        @append prop
     else if properties instanceof Object
       for key, type of properties
         if properties.hasOwnProperty(key)
           if not (type instanceof Type)
             throw new Error("invalid_property_type: #{type}")
-        prop = new PropertyType key, type
-        keys[key] = prop
-        props.push prop
+        @append new PropertyType key, type
     else
       throw new Error("invalid_object_type_properties: must_be_array_of_property_types_or_object_of_types")
-    options =
-      typeID: Type.typeID++
-      properties: props
-    util._mixin @, options
   typeCategory: 'Object'
   isGeneric: () ->
     for prop in @properties
@@ -45,7 +37,7 @@ class ObjectType extends Type
   build: ObjectType
   isa: (obj) ->
     if @outerIsa obj
-      for prop in @properties
+      for prop in @ordered
         if not prop.isa obj[prop.name]
           return false
       return true
@@ -54,7 +46,7 @@ class ObjectType extends Type
   outerIsa: (obj) -> obj instanceof Object
   _convert: (obj, error, path , isExplicit) ->
     result = {};
-    for prop in @properties
+    for prop in @ordered
       result[prop.name] = prop._convert obj[prop.name], "#{path}/#{prop.name}", isExplicit
     result
   canAssignFrom: (type) ->
@@ -75,10 +67,10 @@ class ObjectType extends Type
         PropertyType key, resolver.resolve(val)
     ObjectType props
   _sortedProperties: () ->
-    [].concat(@properties).sort (a, b) -> a.name > b.name
+    [].concat(@ordered).sort (a, b) -> a.name > b.name
   equal: (type) ->
     if type instanceof ObjectType
-      if @properties.length != type.properties.length
+      if @ordered.length != type.ordered.length
         return false
       sortedA = @_sortedProperties()
       sortedB = type._sortedProperties()
@@ -90,21 +82,23 @@ class ObjectType extends Type
       false
   _toString: (env) ->
     props =
-      for prop in @properties
+      for prop in @ordered
         prop._toString(env)
     "Object[#{props.join(',')}]"
   has: (key) ->
-    @get(key) != undefined
+    @properties.hasOwnProperty(key)
   get: (key) ->
-    for p in @properties
-      if p.name == key
-        return p
-    undefined
+    if @has key
+      @properties[key]
+    else
+      throw new Error("ObjectType.get:unknown_key: #{key}")
   append: (prop) ->
-    for p in @properties
-      if prop.name == p.name
+    if not (prop instanceof Type) and prop.typeCategory == 'Property'
+      throw new Error("invalid_property_type: #{prop}")
+    if @has prop.name
         throw new Error("object_type_duplicate_property: #{prop.name}")
-    @properties.push prop
+    @properties[prop.name] = prop
+    @ordered.push prop
 
 Type.attachType Object, ObjectType()
 

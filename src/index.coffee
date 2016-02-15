@@ -7,6 +7,7 @@ require './object-type'
 require './oneof-type'
 require './procedure-type'
 require './type-trait'
+require './json-schema'
 
 util = require './util'
 
