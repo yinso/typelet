@@ -26,10 +26,10 @@ function numberHelper(num, frac, exp) {
 TopLevel
 ************************************************************************/
 start
-= _ types:TypeExp+ _ { 
+= _ types:TypeExp+ _ {
   return types[types.length - 1];
 }
-	
+
 TypeExp
 = PrimitiveTypeExp
 / ArrayTypeExp
@@ -38,31 +38,31 @@ TypeExp
 / ProcedureTypeExp
 
 PrimitiveTypeExp
-= 'unit' _ { return Type.Unit; }
-/ 'null' _ { return Type.Null; }
-/ 'boolean' _ { return Type.Boolean; }
-/ 'bool' _ { return Type.Boolean; }
-/ 'integer' _ { return Type.Integer; }
-/ 'int' _ { return Type.Integer; }
-/ 'float' _ { return Type.Float; }
-/ 'string' _ { return Type.String; }
-/ 'date' _ { return Type.Date; }
+= 'unit' _ { return Type.baseEnv.get('unit'); }
+/ 'null' _ { return Type.baseEnv.get('null'); }
+/ 'boolean' _ { return Type.baseEnv.get('boolean'); }
+/ 'bool' _ { return Type.baseEnv.get('boolean'); }
+/ 'integer' _ { return Type.baseEnv.get('integer'); }
+/ 'int' _ { return Type.baseEnv.get('integer'); }
+/ 'float' _ { return Type.baseEnv.get('float'); }
+/ 'string' _ { return Type.baseEnv.get('string'); }
+/ 'date' _ { return Type.baseEnv.get('date'); }
 
 /************************************************************************
 ArrayTypeExp
 ************************************************************************/
 ArrayTypeExp
-= '[' _ inner:TypeExp _ ']' _ { return Type.ArrayType(inner); }
+= '[' _ inner:TypeExp _ ']' _ { return Type.baseEnv.get('array')(inner); }
 
 /************************************************************************
 ObjectTypeExp
 ************************************************************************/
 ObjectTypeExp
-= '{' _ props:PropTypeExp* _ '}' _ { return Type.ObjectType(props); }
+= '{' _ props:PropTypeExp* _ '}' _ { return Type.baseEnv.get('object')(props); }
 
 PropTypeExp
-= key:propNameExp _ ':' _ type:TypeExp _ '=' _ defaultVal:ValueExp _ propTypeDelim? { return Type.PropertyType(key, type, defaultVal); }
-/ key:propNameExp _ ':' _ type:TypeExp _ propTypeDelim? { return Type.PropertyType(key, type); }
+= key:propNameExp _ ':' _ type:TypeExp _ '=' _ defaultVal:ValueExp _ propTypeDelim? { return Type.baseEnv.get('property')(key, type, defaultVal); }
+/ key:propNameExp _ ':' _ type:TypeExp _ propTypeDelim? { return Type.baseEnv.get('property')(key, type); }
 
 propNameExp
 = SymbolExp
@@ -78,7 +78,7 @@ OneOfTypeExp
   if (types.length == 0) {
     return type;
   } else {
-    return Type.OneOfType(types.concat([ type ]));
+    return Type.baseEnv.get('oneOf')(types.concat([ type ]));
   }
 }
 
@@ -90,7 +90,7 @@ ProcedureTypeExp
 ************************************************************************/
 ProcedureTypeExp
 = '(' _ argTypes:_argTypeItem* _ ')' _ '->' _ retType:TypeExp _ {
-  return Type.ProcedureType(argTypes, retType);
+  return Type.baseEnv.get('procedure')(argTypes, retType);
 }
 
 _argTypeItem
@@ -150,22 +150,22 @@ BoolExp
 NumberExp
 ************************************************************************/
 NumberExp
-= int:int frac:frac exp:exp _ { 
+= int:int frac:frac exp:exp _ {
   return numberHelper(int, frac, exp);
 }
-/ int:int frac:frac _     { 
+/ int:int frac:frac _     {
   return numberHelper(int, frac, '');
 }
-/ '-' frac:frac _ { 
+/ '-' frac:frac _ {
   return numberHelper('-', frac, '');
 }
-/ frac:frac _ { 
+/ frac:frac _ {
   return numberHelper('', frac, '');
 }
-/ int:int exp:exp _      { 
+/ int:int exp:exp _      {
   return numberHelper(int, '', exp);
 }
-/ int:int _          { 
+/ int:int _          {
   return numberHelper(int, '', '');
 }
 
@@ -221,7 +221,7 @@ char
 / "\\n"  { return "\n"; }
 / "\\r"  { return "\r"; }
 / "\\t"  { return "\t"; }
-/ whitespace 
+/ whitespace
 / "\\u" digits:hexDigit4 {
   return String.fromCharCode(parseInt("0x" + digits));
 }
@@ -232,7 +232,7 @@ hexDigit4
 /************************************************************************
 SymbolExp
 ************************************************************************/
-SymbolExp 
+SymbolExp
 = _ c1:symbol1stChar rest:symbolRestChar* _ { return [ c1 ].concat(rest).join(''); }
 
 symbol1stChar
@@ -278,8 +278,8 @@ singleLineCommentStart
 = '//' // c style
 
 singleLineComment
-= singleLineCommentStart chars:(!lineTermChar sourceChar)* lineTerm? { 
-  return {comment: chars.join('')}; 
+= singleLineCommentStart chars:(!lineTermChar sourceChar)* lineTerm? {
+  return {comment: chars.join('')};
 }
 
 multiLineComment

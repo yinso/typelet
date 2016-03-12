@@ -33,7 +33,7 @@ class PropertyType extends Type
   build: PropertyType
   isa: (obj) -> @innerType.isa obj
   convert: (obj, options = {}) ->
-    if obj == undefined 
+    if obj == undefined
       if @hasOwnProperty('defaultVal')
         if util._isFunction @defaultVal
           @defaultVal()
@@ -50,8 +50,6 @@ class PropertyType extends Type
   equal: (type) ->
     (type instanceof PropertyType) and @innerType.equal(type.innerType)
 
-util._mixin Type,
-  PropertyType: PropertyType
+Type.baseEnv.define 'property', PropertyType
 
 module.exports = PropertyType
-

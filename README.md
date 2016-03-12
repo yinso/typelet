@@ -7,24 +7,24 @@
 ## Usage
 
     var Type = require('typelet');
-    
+
 Type checking:
 
-    Type.Integer.isa(1); // ==> true
-    Type.Integer.isa(1.5); // ==> false
-    Type.Float.isa(1.5); // ==> true
-    
+    Type.baseEnv.get('integer').isa(1); // ==> true
+    Type.baseEnv.get('integer').isa(1.5); // ==> false
+    Type.baseEnv.get('float').isa(1.5); // ==> true
+
     // compound types.
-    var intArrayType = Type.ArrayType(Type.Integer)
+    var intArrayType = Type.baseEnv.get('array')(Type.baseEnv.get('integer'))
     intArrayType.isa([1, 2, 3, 4, 5]); // ==> true
-    var objFooType = Type.ObjectType({ foo: Type.Integer, bar: Type.String });
+    var objFooType = Type.baseEnv.get('object')({ foo: Type.baseEnv.get('integer'), bar: Type.baseEnv.get('string') });
     objFooType.isa({foo: 1, bar: 'a string'}); // ==> true
     objFooType.isa({foo: 1, baz: 2}); // ==> false
 
 Type checking via assert:
 
-    Type.Integer.assert(1); // OK
-    Type.Integer.assert(1.5); // throws
+    Type.baseEnv.get('integer').assert(1); // OK
+    Type.baseEnv.get('integer').assert(1.5); // throws
     intArrayType.assert([1, 'not an int']); // throws
     objFooType.assert({foo: 1, bar: 'a string'}); // OK
     objFooType.assert({foo: 1, bar: 'a string', baz: 2}); // OK - ObjectType is okay with additional attributes.
@@ -32,8 +32,8 @@ Type checking via assert:
 
 Type conversion:
 
-    var val = Type.Integer.convert('1'); // string -> int
-    var val = Type.Integer.convert('not an int'); // throws
+    var val = Type.baseEnv.get('integer').convert('1'); // string -> int
+    var val = Type.baseEnv.get('integer').convert('not an int'); // throws
 
 JSON Schema support (limited at this time):
 
@@ -74,16 +74,15 @@ JSON Schema support (limited at this time):
 Built-in types currently follows JavaScript built-in types.
 
 * Scalar Types
-    * unit (`Type.Unit`) - maps to `undefined` in JavaScript.
-    * null (`Type.Null`) - maps to `null` in JavaScript.
-    * boolean (`Type.Boolean`) maps to `true` and `false` in JavaScript.
-    * integer (`Type.Integer`)
-    * float (`Type.Float`) - `NaN` is not considered a number in this type system.
-    * string (`Type.String`)
-    * date (`Type.Date`)
+    * unit (`Type.baseEnv.get('unit')`) - maps to `undefined` in JavaScript.
+    * null (`Type.baseEnv.get('null')`) - maps to `null` in JavaScript.
+    * boolean (`Type.baseEnv.get('boolean')`) maps to `true` and `false` in JavaScript.
+    * integer (`Type.baseEnv.get('integer')`)
+    * float (`Type.baseEnv.get('float')`) - `NaN` is not considered a number in this type system.
+    * string (`Type.baseEnv.get('string')`)
+    * date (`Type.baseEnv.get('date')`)
 * Compound Types
-    * array (`Type.ArrayType(<type>)`)
-    * object (`Type.ObjectType({ key1: <type1>, key2: <type2>, ...})`)
-    * disjoint union (`Type.OneOf(<type1>, <type2>, ...)`)
-    * procedure (`Type.ProcedureType([<argType1>, ...], <returnType>)`)
-
+    * array (`Type.baseEnv.get('array')(<type>)`)
+    * object (`Type.baseEnv.get('object')({ key1: <type1>, key2: <type2>, ...})`)
+    * disjoint union (`Type.baseEnv.get('oneOf')(<type1>, <type2>, ...)`)
+    * procedure (`Type.baseEnv.get('procedure')([<argType1>, ...], <returnType>)`)

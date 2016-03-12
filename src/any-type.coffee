@@ -23,8 +23,6 @@ class AnyType extends Type
     type instanceof AnyType
   isa: (obj) -> true
 
-util._mixin Type,
-  makeAnyType: AnyType
+Type.baseEnv.define 'any', AnyType
 
 module.exports = AnyType
-

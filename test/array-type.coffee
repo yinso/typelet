@@ -3,14 +3,16 @@ Type = require '../src/'
 
 describe 'Array type test', ->
 
-  arrayOfInt = Type.ArrayType(Type.Integer)
-  arrayOfFloat = Type.ArrayType Type.Float
+  typeEnv = Type.baseEnv
+
+  arrayOfInt = typeEnv.get('array')(Type.baseEnv.get('integer'))
+  arrayOfFloat = typeEnv.get('array') Type.baseEnv.get('float')
 
   it 'can check', ->
     assert.ok arrayOfInt.isa [ 1 , 2 , 3 ]
     assert.ok arrayOfFloat.isa [ 1.5, 2.5 , 3.5 ]
     assert.notOk arrayOfFloat.isa [ 1.5, 'hello', 3.5 ]
-  
+
   it 'can assert', ->
 
     assert.throws ->
@@ -26,5 +28,3 @@ describe 'Array type test', ->
     assert.ok arrayOfInt.canAssignFrom arrayOfInt
     assert.ok arrayOfFloat.canAssignFrom arrayOfFloat
     assert.notOk arrayOfFloat.canAssignFrom arrayOfInt
-
-

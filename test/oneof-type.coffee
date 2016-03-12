@@ -3,7 +3,7 @@ Type = require '../src'
 
 describe 'One Of Type test', ->
 
-  intOrString = Type.OneOfType [ Type.Integer, Type.String ]
+  intOrString = Type.baseEnv.get('oneOf') [ Type.baseEnv.get('integer'), Type.baseEnv.get('string') ]
 
   it 'can check', ->
     assert.ok intOrString.isa 10
@@ -20,12 +20,11 @@ describe 'One Of Type test', ->
 
   it 'can assign from', ->
 
-    assert.ok intOrString.canAssignFrom Type.Integer
-    assert.ok intOrString.canAssignFrom Type.String
-    assert.notOk intOrString.canAssignFrom Type.Boolean
+    assert.ok intOrString.canAssignFrom Type.baseEnv.get('integer')
+    assert.ok intOrString.canAssignFrom Type.baseEnv.get('string')
+    assert.notOk intOrString.canAssignFrom Type.baseEnv.get('boolean')
 
-    intOrNull = Type.OneOfType [ Type.Integer, Type.Null ]
-    assert.ok intOrNull.canAssignFrom Type.OneOfType [ Type.Null, Type.Integer ] # order of the oneOfType doesn't matter.
-    assert.ok intOrNull.canAssignFrom Type.Integer
-    assert.ok intOrNull.canAssignFrom Type.Null
-
+    intOrNull = Type.baseEnv.get('oneOf') [ Type.baseEnv.get('integer'), Type.baseEnv.get('null') ]
+    assert.ok intOrNull.canAssignFrom Type.baseEnv.get('oneOf') [ Type.baseEnv.get('null'), Type.baseEnv.get('integer') ] # order of the oneOfType doesn't matter.
+    assert.ok intOrNull.canAssignFrom Type.baseEnv.get('integer')
+    assert.ok intOrNull.canAssignFrom Type.baseEnv.get('null')

@@ -2,7 +2,25 @@ Check = require '../src/check'
 { assert } = require 'chai'
 
 describe 'Check test', ->
+  # check is not meant to be used directly...
+  it 'can do stuff', ->
+    check =Check.compile
+      params: [
+        {
+          name: { symbol: 'foo'}
+          type: { symbol: 'integer' }
+        }
+      ]
+      body:
+        type: 'binary'
+        op: { symbol: '==' }
+        lhs: { symbol: 'foo' }
+        rhs: { type: 'integer', value: 10 }
 
+
+
+
+###
   it 'can create symbol exp', ->
     sym = Check.Symbol('foo')
     assert.equal 'foo', sym.compile()
@@ -17,7 +35,7 @@ describe 'Check test', ->
     op = Check.Symbol('==')
     sym = Check.Symbol('foo')
     lit = Check.Literal(10)
-    assert.equal 'foo==10', Check.Binary(op, sym, lit).compile()
+    assert.equal '(foo==10)', Check.Binary(op, sym, lit).compile()
 
   it 'can create procedure exp', ->
     op = Check.Symbol('==')
@@ -146,4 +164,4 @@ describe 'Check test', ->
     assert.ok check.check 2
     assert.ok check.check 1
     assert.notOk check.check 3
-
+###

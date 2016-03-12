@@ -50,51 +50,51 @@ class Schema
           else
             throw new Error("Compiler:unknown_type: #{schema.type}")
     if schema.default
-      Type.PropertyType null, type, schema.default
+      Type.baseEnv.get('property') null, type, schema.default
     else
       type
   _integer: (schema) ->
-    Type.Integer
+    Type.baseEnv.get('integer')
   _float: (schema) ->
-    Type.Float
+    Type.baseEnv.get('float')
   _boolean: (schema) ->
-    Type.Boolean
+    Type.baseEnv.get('boolean')
   _null: (schema) ->
-    Type.Null
+    Type.baseEnv.get('null')
   _string: (schema) ->
-    Type.String
+    Type.baseEnv.get('string')
   _typeOneOf: (schema) ->
     types =
       for type in schema.type
         @buildOne { type: type }
-    Type.OneOfType types
+    Type.baseEnv.get('oneOf') types
   _oneOf: (schema) ->
     types =
       for type in schema.oneOf or []
         @buildOne type
-    Type.OneOfType types
+    Type.baseEnv.get('oneOf') types
   _array: (schema) ->
     itemType = @buildOne schema.items
-    Type.ArrayType itemType
+    Type.baseEnv.get('array') itemType
   _object: (schema) ->
     props =
       for key, inner of (schema.properties or {})
-        Type.PropertyType key, @buildOne(inner)
-    Type.ObjectType props
+        Type.baseEnv.get('property') key, @buildOne(inner)
+    Type.baseEnv.get('object') props
   _array: (schema) ->
     itemType = @buildOne schema.items
-    Type.ArrayType itemType
+    Type.baseEnv.get('array') itemType
   _object: (schema) ->
     props =
       for key, inner of (schema.properties or {})
-        Type.PropertyType key, @buildOne(inner)
-    Type.ObjectType props
+        Type.baseEnv.get('property') key, @buildOne(inner)
+    Type.baseEnv.get('object') props
   _ref: (schema) ->
     # for now, assume the refs just follow the following #/definitions/<name> pattern.
     name = @_parseRef schema.$ref
     @env.get name
   _parseRef: (ref) ->
-    # we will only support     
+    # we will only support
     parsed = ref.split '/'
     parsed[parsed.length - 1]
 
@@ -102,6 +102,3 @@ util._mixin Type,
   Schema: Schema
 
 module.exports = Schema
-
-
-

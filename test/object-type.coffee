@@ -3,9 +3,9 @@ Type = require '../src'
 
 describe 'Object test', ->
 
-  fooType = Type.ObjectType [
-    Type.PropertyType('foo', Type.Integer)
-    Type.PropertyType('bar', Type.String)
+  fooType = Type.baseEnv.get('object') [
+    Type.baseEnv.get('property')('foo', Type.baseEnv.get('integer'))
+    Type.baseEnv.get('property')('bar', Type.baseEnv.get('string'))
   ]
 
   it 'can check', ->
@@ -22,23 +22,22 @@ describe 'Object test', ->
 
   it 'can catch duplicate keys', ->
     assert.throws ->
-      Type.ObjectType [
-        Type.PropertyType('foo', Type.Integer)
-        Type.PropertyType('bar', Type.String)
-        Type.PropertyType('foo', Type.Boolean)
+      Type.baseEnv.get('object') [
+        Type.baseEnv.get('property')('foo', Type.baseEnv.get('integer'))
+        Type.baseEnv.get('property')('bar', Type.baseEnv.get('string'))
+        Type.baseEnv.get('property')('foo', Type.baseEnv.get('boolean'))
       ]
 
   it 'can make simple objet types', ->
-    type = Type.ObjectType
-      foo: Type.Integer
-      bar: Type.String
+    type = Type.baseEnv.get('object')
+      foo: Type.baseEnv.get('integer')
+      bar: Type.baseEnv.get('string')
     assert.equal 2, type.ordered.length
-    assert.ok Type.PropertyType('foo', Type.Integer).equal type.get('foo')
-    assert.ok Type.PropertyType('bar', Type.String).equal type.get('bar')
+    assert.ok Type.baseEnv.get('property')('foo', Type.baseEnv.get('integer')).equal type.get('foo')
+    assert.ok Type.baseEnv.get('property')('bar', Type.baseEnv.get('string')).equal type.get('bar')
 
   it 'can assign from', ->
-    objType1 = Type.ObjectType([Type.PropertyType('a',Type.Integer)])
-    objType2 = Type.ObjectType([Type.PropertyType('b',Type.Integer),Type.PropertyType('a',Type.Integer)])
+    objType1 = Type.baseEnv.get('object')([Type.baseEnv.get('property')('a',Type.baseEnv.get('integer'))])
+    objType2 = Type.baseEnv.get('object')([Type.baseEnv.get('property')('b',Type.baseEnv.get('integer')),Type.baseEnv.get('property')('a',Type.baseEnv.get('integer'))])
     assert.ok objType1.canAssignFrom(objType2)
     assert.notOk objType2.canAssignFrom(objType1)
-

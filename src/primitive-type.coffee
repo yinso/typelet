@@ -27,36 +27,52 @@ class PrimitiveType extends Type
   _toString: (env) -> @name
 
 
-UnitType = Type.Unit = PrimitiveType 'Unit',
+UnitType = PrimitiveType 'Unit',
   isa: (obj) -> obj == undefined
 
-NullType = Type.Null = PrimitiveType 'Null',
+Type.baseEnv.define 'unit', UnitType
+
+NullType = PrimitiveType 'Null',
   isa: (obj) -> obj == null
 
-BooleanType = Type.Boolean = PrimitiveType 'Boolean',
+Type.baseEnv.define 'null', NullType
+
+BooleanType = PrimitiveType 'Boolean',
   instanceof: Boolean
 
-IntegerType = Type.Integer = PrimitiveType 'Integer',
+Type.baseEnv.define 'boolean', BooleanType
+
+IntegerType = PrimitiveType 'Integer',
   isa: (obj) ->
     typeof(obj) == 'number' and Math.floor(obj) == obj
 
-FloatType = Type.Float = PrimitiveType 'Float',
+Type.baseEnv.define 'integer', IntegerType
+
+FloatType = PrimitiveType 'Float',
   isa: (obj) ->
     typeof(obj) == 'number'
   instanceof: Number
 
-StringType = Type.String = PrimitiveType 'String',
+Type.baseEnv.define 'float', FloatType
+
+StringType = PrimitiveType 'String',
   instanceof: String
 
-DateType = Type.Date = PrimitiveType 'Date',
+Type.baseEnv.define 'string', StringType
+
+DateType = PrimitiveType 'Date',
   isa: (obj) ->
     obj instanceof Date
   instanceof: Date # this attaches the object constructor.
 
-RegExpType = Type.RegExp = PrimitiveType 'RegExp',
+Type.baseEnv.define 'date', DateType
+
+RegExpType = PrimitiveType 'RegExp',
   isa: (obj) ->
     obj instanceof RegExp
   instanceof: RegExp
+
+Type.baseEnv.define 'regex', RegExpType
 
 BooleanType.setConvert
   type: StringType
@@ -133,7 +149,6 @@ StringType.setConvert
   converter: (b) -> b.toString()
 
 util._mixin Type,
-  makePrimitiveType: PrimitiveType
   resolve: (obj) ->
     if obj == undefined
       UnitType
@@ -152,4 +167,3 @@ util._mixin Type,
       throw new Error("unknown_type: #{obj}")
 
 module.exports = PrimitiveType
-

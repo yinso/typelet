@@ -93,7 +93,7 @@ class ObjectType extends Type
     else
       throw new Error("ObjectType.get:unknown_key: #{key}")
   set: (key, type) ->
-    @append Type.PropertyType(key, type)
+    @append Type.baseEnv.get('property')(key, type)
   append: (prop) ->
     if not (prop instanceof Type) and prop.typeCategory == 'Property'
       throw new Error("invalid_property_type: #{prop}")
@@ -104,8 +104,6 @@ class ObjectType extends Type
 
 Type.attachType Object, ObjectType()
 
-util._mixin Type,
-  ObjectType: ObjectType
+Type.baseEnv.define 'object', ObjectType
 
 module.exports = ObjectType
-

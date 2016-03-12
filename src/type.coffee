@@ -2,6 +2,9 @@ util = require './util'
 errLib = require './error'
 TypeEnv = require './type-env'
 UnaryDispatcher = require './type-dispatcher'
+AST = require 'astlet'
+
+class TypeEnvironment extends AST.Environment
 
 convertError = (context = convertError) ->
   new errLib.ConvertError context
@@ -32,7 +35,7 @@ class Type
   # used for determining assignment relationship.
   canAssignFrom: (type) -> false
   # determine whether obj is a type of <this>.
-  canAssignTo: (type) -> 
+  canAssignTo: (type) ->
     type.canAssignFrom @
   isa: (obj) ->
   assert: (obj, context) ->
@@ -94,7 +97,7 @@ createType = (ctor, options) ->
   if not util._isFunction ctor
     throw new Error("invalid_constructor: #{ctor}")
   if not (ctor.prototype instanceof Type)
-    util._class 
+    util._class
       constructor: ctor
       __super__: Type
   util._new ctor, options
@@ -111,7 +114,7 @@ util._mixin Type,
   attachType: attachType
   convertError: convertError
   TypeEnv: TypeEnv
+  baseEnv: new TypeEnvironment()
   makeDispatcher: UnaryDispatcher
 
 module.exports = Type
-

@@ -210,7 +210,7 @@ makeProc = (argsTypes, retType, proc, options = {}) ->
 
 util._mixin Type,
   makeProc: makeProc
-  ProcedureType: ProcedureType
+
+Type.baseEnv.define 'procedure', ProcedureType
 
 module.exports = ProcedureType
-

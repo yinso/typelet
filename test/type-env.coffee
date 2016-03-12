@@ -11,22 +11,21 @@ describe 'Type env test', ->
 
   it 'can associate name to a type', ->
 
-    env.define 'integer', Type.Integer
+    env.define 'integer', Type.baseEnv.get('integer')
     assert.ok env.has 'integer'
-    assert.strictEqual Type.Integer, env.get 'integer'
+    assert.strictEqual Type.baseEnv.get('integer'), env.get 'integer'
 
   it 'cannot re-associate name to a new type', ->
     assert.throws ->
-      env.define 'integer', Type.Float
+      env.define 'integer', Type.baseEnv.get('float')
 
   nested = null
 
   it 'can nest scope', ->
 
     nested = env.pushEnv()
-    nested.define 'integer', Type.Float
-    assert.strictEqual Type.Float, nested.get('integer')
-    assert.strictEqual Type.Integer, nested.popEnv().get('integer')
+    nested.define 'integer', Type.baseEnv.get('float')
+    assert.strictEqual Type.baseEnv.get('float'), nested.get('integer')
+    assert.strictEqual Type.baseEnv.get('integer'), nested.popEnv().get('integer')
 
   # we want this for what purpose?
-

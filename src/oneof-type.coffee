@@ -68,8 +68,6 @@ class OneOfType extends Type
         type._toString(env)
     "OneOf[#{types.join(',')}]"
 
-util._mixin Type,
-  OneOfType: OneOfType
+Type.baseEnv.define 'oneOf', OneOfType
 
 module.exports = OneOfType
-

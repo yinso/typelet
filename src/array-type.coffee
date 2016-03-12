@@ -60,9 +60,6 @@ class ArrayType extends Type
 
 Type.attachType Array, ArrayType()
 
-util._mixin Type,
-  ArrayType: ArrayType
+Type.baseEnv.define 'array', ArrayType
 
 module.exports = ArrayType
-
-
